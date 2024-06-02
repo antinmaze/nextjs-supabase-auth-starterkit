@@ -9,7 +9,7 @@ Features
 
     - Supbase Authentification: Login/Password SignUp, Signin & Sign Out using Supabase.auth
     - Authentification Error Management (using the handlesubmit and api mechanisms) 
-    - Responsive Navbar using the NextJSTemplates Next.js Tailwind Startup Template includinf Dark mode
+    - Responsive Navbar using the NextJSTemplates Next.js Tailwind Startup Template including     Dark mode
 
 App Architecture
 
