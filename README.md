@@ -37,8 +37,18 @@ Backlog
 Deployment
 
     This is a simple Next.js project run with npm.
-    For development environnment > npm run dev
-
+    First, you need to declare Supabase Environment Variables by creating a .env.local file containing the following variables.
+    Populate themn with your Supabase connection variables:
+    
+      NEXT_PUBLIC_SUPABASE_URL=<SUBSTITUTE_SUPABASE_URL>
+      NEXT_PUBLIC_SUPABASE_ANON_KEY=<SUBSTITUTE_SUPABASE_ANON_KEY>
+    
+    See the documentation for further details: https://supabase.com/docs/guides/getting-started/quickstarts/nextjs
+    
+    To run the project in a development environment, execute the following command: 
+    npm run dev
+    or ./dev.sh
+    
 License
 
     MIT 
