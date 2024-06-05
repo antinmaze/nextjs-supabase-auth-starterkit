@@ -29,7 +29,6 @@ export async function POST(request: NextRequest) {
   if (error) {
     //could be 429 "Email rate limit exceeded" message
     //could be 429 "For security purposes, you can only request this after 48 seconds.""
-    console.log(">>" + error.message);
     const responseBody = JSON.stringify({ error: error.message });
     return buildResponse(responseBody, error.status ?? 500, error.message);
   }

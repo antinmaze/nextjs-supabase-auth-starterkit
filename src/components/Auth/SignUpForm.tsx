@@ -1,35 +1,27 @@
 'use client';
 
 import Link from "next/link";
-import { Metadata } from "next";
-import { useRef, useState }from 'react';
+import { useRef, useState } from 'react';
 import EyeFill from '../../icons/EyeFill';
 import EyeSlashFill from '../../icons/EyeSlashFill';
 import { setPasswordVisibility } from "@/utils/auth/factory";
 import { useRouter } from 'next/navigation';
 
-export const metadata: Metadata = {
-  title: "Sign Up Page | Free Next.js Template for Startup and SaaS",
-  description: "This is Sign Up Page for Startup Nextjs Template",
-  // other metadata
-};
-
-//const SignUpForm = ({ onSignUpSuccess }) => {
 const SignUpForm = () => {
   const router = useRouter();
 
   const [infoMessage, setInfoMessage] = useState('');
-  //const infoMessageRef = useRef(null);
   const infoMessageRef = useRef<HTMLDivElement | null>(null);
   const [hasSigneddUp, setHasSigneddUp] = useState(false);
   const [isLoading, setIsLoading] = useState(false); // état de chargement
+  const TARGET_SUCCESS_PAGE = '/welcome';
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (hasSigneddUp) return;
 
-    setIsLoading(true); // définir l'état de chargement à true
+    setIsLoading(true); // set load status to true
 
     const formData = new FormData(event.currentTarget);
     const data = new FormData();
@@ -44,21 +36,21 @@ const SignUpForm = () => {
 
       if (response.status >= 300) {
         setInfoMessage(response.statusText);
-        infoMessageRef.current?.classList.remove('text-body-color');
-        infoMessageRef.current?.classList.add('text-red-400');        
+        infoMessageRef.current?.classList.remove('text-primary');
+        infoMessageRef.current?.classList.add('text-red-400');
       } else { //Successful connection
         setHasSigneddUp(true);
         const json = await response.json();
         const welcomeMessage = json.message;
         setInfoMessage(welcomeMessage);
         infoMessageRef.current?.classList.remove('text-red-400');
-        infoMessageRef.current?.classList.add('text-body-color');
-        router.push('/welcome');
+        infoMessageRef.current?.classList.add('text-primary');
+        router.push(TARGET_SUCCESS_PAGE);
       }
     } catch (error) {
       setInfoMessage('An error has occurred. Please try again later.');
-      infoMessageRef.current?.classList.remove('text-body-color');
-      infoMessageRef.current?.classList.add('text-red-400');        
+      infoMessageRef.current?.classList.remove('text-primary');
+      infoMessageRef.current?.classList.add('text-red-400');
     } finally {
       setIsLoading(false); // définir l'état de chargement à false
     }
@@ -66,7 +58,9 @@ const SignUpForm = () => {
 
   const passwordInputRef = useRef(null);
   const handlePasswordVisibility = () => {
-    setPasswordVisibility(passwordInputRef); 
+    var eyeIconElement = document.getElementById("eye-icon") as HTMLInputElement;
+    var eyeSlashIconElement = document.getElementById("eye-slash-icon") as HTMLInputElement;
+    setPasswordVisibility(passwordInputRef, eyeIconElement, eyeSlashIconElement);
   };
 
   return (
@@ -79,9 +73,6 @@ const SignUpForm = () => {
                 <h3 className="mb-3 text-center text-2xl font-bold text-black dark:text-white sm:text-3xl">
                   Create your account
                 </h3>
-                <p id="infomessage" ref={infoMessageRef} className="text-center h-8 pt-2 text-base font-medium text-red-400">
-                  {infoMessage}
-                </p>
                 <button className="border-stroke dark:text-body-color-dark dark:shadow-two mb-6 flex w-full items-center justify-center rounded-sm border bg-[#f8f8f8] px-6 py-3 text-base text-body-color outline-none transition-all duration-300 hover:border-primary hover:bg-primary/5 hover:text-primary dark:border-transparent dark:bg-[#2C303B] dark:hover:border-primary dark:hover:bg-primary/5 dark:hover:text-primary dark:hover:shadow-none">
                   <span className="mr-3">
                     <svg
@@ -158,16 +149,34 @@ const SignUpForm = () => {
                       ref={passwordInputRef}
                       className="border-stroke dark:text-body-color-dark dark:shadow-two w-full rounded-sm border bg-[#f8f8f8] px-6 py-3 text-base text-body-color outline-none transition-all duration-300 focus:border-primary dark:border-transparent dark:bg-[#2C303B] dark:focus:border-primary dark:focus:shadow-none"
                     />
-                      <button
-                        id="password-switch"
-                        type="button"
-                        className="absolute mt-0 inset-y-0 right-0 flex items-center px-2 bg-transparent"
-                        onClick={handlePasswordVisibility}
-                      >
-                        <EyeFill id="eye-icon" className="absolute right-2 bottom-2 text-3xl" />
-                        <EyeSlashFill id="eye-slash-icon" className="hidden absolute right-2 bottom-2 text-3xl" />
-                      </button>                    
+                    <button
+                      id="password-switch"
+                      type="button"
+                      className="absolute mt-0 inset-y-0 right-0 flex items-center px-2 bg-transparent"
+                      onClick={handlePasswordVisibility}
+                    >
+                      <EyeFill id="eye-icon" className="absolute right-2 bottom-2 text-3xl" />
+                      <EyeSlashFill id="eye-slash-icon" className="hidden absolute right-2 bottom-2 text-3xl" />
+                    </button>
                   </div>
+
+                  <div className="mb-3 block text-sm text-dark dark:text-white">
+                    <h3>Password must contain the following:</h3>
+                    <ul className="list-disc pl-5">
+                      <li>
+                        <p id="letter" className="invalid">A <b>lowercase</b> letter</p>
+                      </li>
+                      <li>
+                        <p id="capital" className="invalid">
+                          A <b>capital (uppercase)</b> letter
+                        </p>
+                      </li>
+                      <li><p id="number" className="invalid">A <b>number</b></p></li>
+                      <li><p id="number" className="invalid">A special caracter .[]{ }()&lt;&gt; \^$|?*+!@#&lt;&gt;</p></li>
+                      <li><p id="length" className="invalid">Minimum <b>8 characters</b></p></li>
+                    </ul>
+                  </div>
+
                   <div className="mb-8 flex">
                     <label
                       htmlFor="checkboxLabel"
@@ -216,8 +225,11 @@ const SignUpForm = () => {
                     <button className="shadow-submit dark:shadow-submit-dark flex w-full items-center justify-center rounded-sm
                      bg-primary px-9 py-4 text-base font-medium text-white duration-300
                       hover:bg-primary/90" disabled={isLoading}>
-                        {isLoading ? 'Loading...' : 'Sign up'}
+                      {isLoading ? 'Loading...' : 'Sign up'}
                     </button>
+                    <p id="infomessage" ref={infoMessageRef} className="text-center h-8 pt-2 text-base font-medium text-red-400">
+                      {infoMessage}
+                    </p>
                   </div>
                 </form>
                 <p className="text-center text-base font-medium text-body-color">

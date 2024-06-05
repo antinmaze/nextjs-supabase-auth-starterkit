@@ -44,11 +44,11 @@ export function buildResponse(_body: BodyInit, _status: number, _statusText: str
  * set Password Visibility on CLient side for SignIN and SignUp
  * @param passwordInputRef the React Reference of the password input HTML Element 
  */
-export function setPasswordVisibility(passwordInputRef: MutableRefObject<any>) {
+export function setPasswordVisibility(passwordInputRef: MutableRefObject<any>, eyeElement : HTMLInputElement, slashElement : HTMLInputElement) {
   const passwordInputElement = passwordInputRef.current;
   //here cannot use Useref as the element could be not displayed in the DOM
-  var eyeIconElement = document.getElementById("eye-icon") as HTMLInputElement;
-  var eyeSlashIconElement = document.getElementById("eye-slash-icon") as HTMLInputElement;
+  var eyeIconElement = eyeElement;
+  var eyeSlashIconElement = slashElement;
 
   if (passwordInputElement.type === "password") {
     passwordInputElement.type = "text";
@@ -60,3 +60,24 @@ export function setPasswordVisibility(passwordInputRef: MutableRefObject<any>) {
     eyeSlashIconElement.classList.add('hidden');
   }
 };
+
+/*
+export function setPasswordVisibility(passwordInputRef: MutableRefObject<any>) {
+  const passwordInputElement = passwordInputRef.current;
+  //here cannot use Useref as the element could be not displayed in the DOM
+  var eyeIconElement = document.getElementById("eye-icon") as HTMLInputElement;
+  var eyeSlashIconElement = document.getElementById("eye-sla
+  h-icon") as HTMLInputElement;
+
+  if (passwordInputElement.type === "password") {
+    passwordInputElement.type = "text";
+    eyeIconElement.classList.add('hidden');
+    eyeSlashIconElement.classList.remove('hidden');
+  } else {
+    passwordInputElement.type = "password";
+    eyeIconElement.classList.remove('hidden');
+    eyeSlashIconElement.classList.add('hidden');
+  }
+};
+
+*/

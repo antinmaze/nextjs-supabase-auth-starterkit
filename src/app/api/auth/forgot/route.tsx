@@ -16,22 +16,14 @@ export async function POST(request: NextRequest) {
     return buildResponse(responseBody, 401, errorMessage);
   }
 
-  //control the input password from the request
-  const password = formData.get('password') as string;
-  if (!isValidPassword(password)) {
-    let errorMessage = "The input password is not valid.";
-    const responseBody = JSON.stringify({ error: errorMessage });
-    return buildResponse(responseBody, 401, errorMessage);
-  }
-
-  //control the grant status from Supabase
-  const { error } = await supabase.auth.signInWithPassword({email, password,});
+  //resetPasswordForEmail from Supabase
+  const { data, error } = await supabase.auth.resetPasswordForEmail(email);
   if (error) {
     const responseBody = JSON.stringify({ error: error.message });
     return buildResponse(responseBody, error.status ?? 500, error.message);
   }
   //here Everything is OK
-  const successMessage = "Authentifciation Success";
+  const successMessage = "A mail has been sent to your mailbox with the instructions to reset your password.";
   const responseBody = JSON.stringify({ message: successMessage });
   return buildResponse(responseBody, 200, successMessage);
 }

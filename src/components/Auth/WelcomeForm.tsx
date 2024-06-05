@@ -26,7 +26,7 @@ const WelcomeForm = () => {
                 Welcome !
                 </h3>
                 <p className="mb-11 text-center text-base font-medium text-body-color">
-                Please confirm your account by clicking on the link sent to your mailbox.
+                You have received an email. Please confirm your account by clicking on the link sent to your mailbox.
                 </p>
    
                 <form >

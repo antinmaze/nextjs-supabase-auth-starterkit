@@ -1,19 +1,12 @@
 'use client';
 
 import Link from "next/link";
-import { Metadata } from "next";
 import { useRef, useState }from 'react';
 import EyeFill from '../../icons/EyeFill';
 import EyeSlashFill from '../../icons/EyeSlashFill';
 import { setPasswordVisibility } from "@/utils/auth/factory";
 import { useRouter } from 'next/navigation';
-
-
-export const metadata: Metadata = {
-  title: "Sign In Page | Free Next.js Template for Startup and SaaS",
-  description: "This is Sign In Page for Startup Nextjs Template",
-  // other metadata
-};
+const TARGET_SUCCESS_PAGE = '/dashboard';
 
 const SignInForm = () => {
   const router = useRouter();
@@ -38,7 +31,7 @@ const SignInForm = () => {
         setInfoMessage(response.statusText);
       } else {
         console.log('Successful connection');
-        router.push('/dashboard');
+        router.push(TARGET_SUCCESS_PAGE);
       }
     } catch (error) {
       setInfoMessage('An error has occurred. Please try again later.');
@@ -47,7 +40,9 @@ const SignInForm = () => {
 
   const passwordInputRef = useRef(null);
   const handlePasswordVisibility = () => {
-    setPasswordVisibility(passwordInputRef); 
+    var eyeIconElement = document.getElementById("eye-icon") as HTMLInputElement;
+    var eyeSlashIconElement = document.getElementById("eye-slash-icon") as HTMLInputElement;  
+    setPasswordVisibility(passwordInputRef, eyeIconElement, eyeSlashIconElement); 
   };
 
   return (
@@ -60,9 +55,6 @@ const SignInForm = () => {
                 <h3 className="mb-3 text-center text-2xl font-bold text-black dark:text-white sm:text-3xl">
                   Sign in to your account
                 </h3>
-                <p className="text-center h-8 pt-2 text-base font-medium text-red-400">
-                  {infoMessage}
-                </p>
                 <p className="mb-11 text-center text-base font-medium text-body-color">
                   Login to your account for a faster checkout.
                 </p>
@@ -188,7 +180,7 @@ const SignInForm = () => {
                     </div>
                     <div>
                       <a
-                        href="#0"
+                        href="/forgot"
                         className="text-sm font-medium text-primary hover:underline"
                       >
                         Forgot Password?
@@ -202,6 +194,9 @@ const SignInForm = () => {
                     >
                       Sign in
                     </button>
+                    <p className="text-center h-8 pt-2 text-base font-medium text-red-400">
+                  {infoMessage}
+                </p>
                   </div>
                 </form>
                 <p className="text-center text-base font-medium text-body-color">
