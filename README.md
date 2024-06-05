@@ -11,6 +11,7 @@ Features
     - Proof Key for Code Exchange (PKCE)
     - Authentification Error Management (using the handlesubmit and api mechanisms) 
     - Responsive Navbar using the NextJSTemplates Next.js Tailwind Startup Template including Dark mode
+    - Managing Forgot/Recover Password
 
 App Architecture
 
@@ -26,8 +27,7 @@ App Architecture
     
 
 Backlog
-
-    Manage Forgot Password
+   
     OIDC Authentification Using Google 
     Supabase Refresh Token (Keep me sign in)
     Implementing the user Profile dedicated page
