@@ -12,14 +12,14 @@ const SignUpForm = () => {
 
   const [infoMessage, setInfoMessage] = useState('');
   const infoMessageRef = useRef<HTMLDivElement | null>(null);
-  const [hasSigneddUp, setHasSigneddUp] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); // état de chargement
+  const [hasSignedUp, sethasSignedUp] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // loading state
   const TARGET_SUCCESS_PAGE = '/welcome';
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (hasSigneddUp) return;
+    if (hasSignedUp) return;
 
     setIsLoading(true); // set load status to true
 
@@ -39,7 +39,7 @@ const SignUpForm = () => {
         infoMessageRef.current?.classList.remove('text-primary');
         infoMessageRef.current?.classList.add('text-red-400');
       } else { //Successful connection
-        setHasSigneddUp(true);
+        sethasSignedUp(true);
         const json = await response.json();
         const welcomeMessage = json.message;
         setInfoMessage(welcomeMessage);
@@ -127,6 +127,7 @@ const SignUpForm = () => {
                       Email{" "}
                     </label>
                     <input
+                      id="email"
                       type="email"
                       name="email"
                       placeholder="Enter your Email"
@@ -222,7 +223,7 @@ const SignUpForm = () => {
                     </label>
                   </div>
                   <div className="mb-6">
-                    <button className="shadow-submit dark:shadow-submit-dark flex w-full items-center justify-center rounded-sm
+                    <button id="button-signup" className="shadow-submit dark:shadow-submit-dark flex w-full items-center justify-center rounded-sm
                      bg-primary px-9 py-4 text-base font-medium text-white duration-300
                       hover:bg-primary/90" disabled={isLoading}>
                       {isLoading ? 'Loading...' : 'Sign up'}

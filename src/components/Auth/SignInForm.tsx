@@ -6,15 +6,21 @@ import EyeFill from '../../icons/EyeFill';
 import EyeSlashFill from '../../icons/EyeSlashFill';
 import { setPasswordVisibility } from "@/utils/auth/factory";
 import { useRouter } from 'next/navigation';
-const TARGET_SUCCESS_PAGE = '/dashboard';
 
 const SignInForm = () => {
   const router = useRouter();
 
   const [infoMessage, setInfoMessage] = useState('');
+  const [hasSignedIn, sethasSignedIn] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // loading state
+  const TARGET_SUCCESS_PAGE = '/dashboard';
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    if (hasSignedIn) return;
+
+    setIsLoading(true); // set load status to true
 
     const formData = new FormData(event.currentTarget);
     const data = new FormData();
@@ -35,6 +41,8 @@ const SignInForm = () => {
       }
     } catch (error) {
       setInfoMessage('An error has occurred. Please try again later.');
+    } finally {
+      setIsLoading(false); // définir l'état de chargement à false
     }
   };
 
@@ -111,11 +119,12 @@ const SignInForm = () => {
                       Your Email
                     </label>
                     <input
+                      id="email"
                       type="email"
                       name="email"
                       placeholder="Enter your Email"
                       autoComplete="username"
-                      className="border-stroke dark:text-body-color-dark dark:shadow-two w-full rounded-sm border bg-[#f8f8f8] px-6 py-3 text-base text-body-color outline-none transition-all duration-300 focus:border-primary dark:border-transparent dark:bg-[#2C303B] dark:focus:border-primary dark:focus:shadow-none"
+                      className="email border-stroke dark:text-body-color-dark dark:shadow-two w-full rounded-sm border bg-[#f8f8f8] px-6 py-3 text-base text-body-color outline-none transition-all duration-300 focus:border-primary dark:border-transparent dark:bg-[#2C303B] dark:focus:border-primary dark:focus:shadow-none"
                     />
                   </div>
                   <div className="mb-8 relative">
@@ -188,14 +197,13 @@ const SignInForm = () => {
                     </div>
                   </div>
                   <div className="mb-6">
-                    <button className="shadow-submit dark:shadow-submit-dark flex w-full items-center justify-center 
+                    <button id="button-signin" className="shadow-submit dark:shadow-submit-dark flex w-full items-center justify-center 
                     rounded-sm bg-primary px-9 py-4 text-base font-medium text-white duration-300
-                     hover:bg-primary/90"
-                    >
-                      Sign in
+                     hover:bg-primary/90" disabled={isLoading}>
+                      {isLoading ? 'Loading...' : 'Sign in'}
                     </button>
-                    <p className="text-center h-8 pt-2 text-base font-medium text-red-400">
-                  {infoMessage}
+                    <p id="infomessage" className="text-center h-8 pt-2 text-base font-medium text-red-400">
+                    {infoMessage}
                 </p>
                   </div>
                 </form>

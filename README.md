@@ -12,6 +12,7 @@ Features
     - Authentification Error Management (using the handlesubmit and api mechanisms) 
     - Responsive Navbar using the NextJSTemplates Next.js Tailwind Startup Template including Dark mode
     - Managing Forgot/Recover Password
+    - Adding of some 2E2 Tests on Signin & SignUp using Cypress
 
 App Architecture
 
@@ -24,10 +25,11 @@ App Architecture
     Postcss
     Prettier
     Vitest
+    Cypress
     
 
 Backlog
-   
+
     OIDC Authentification Using Google 
     Supabase Refresh Token (Keep me sign in)
     Implementing the user Profile dedicated page
