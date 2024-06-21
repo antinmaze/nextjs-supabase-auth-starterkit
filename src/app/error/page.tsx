@@ -8,7 +8,12 @@ export const metadata: Metadata = {
   // other metadata
 };
 
-const ErrorPage = ({ message }) => {
+type ErrorPageProps = {
+  message: string;
+};
+
+const ErrorPage: React.FC<ErrorPageProps> = ({ message }) => {
+//const ErrorPage = ({ message }) => {
   return (
     <>
       <section className="relative z-10 pb-16 pt-36 md:pb-20 lg:pb-28 lg:pt-[180px]">
