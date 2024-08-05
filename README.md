@@ -3,8 +3,6 @@
 https://github.com/NextJSTemplates/startup-nextjs
 
 
-################### UNDER CONSTRUCTION ################### 
-
 Features
 
     - Supabase Authentification: Login/Password SignUp, Signin & Sign Out using Supabase.auth
