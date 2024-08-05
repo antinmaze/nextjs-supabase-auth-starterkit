@@ -3,7 +3,6 @@
 https://github.com/NextJSTemplates/startup-nextjs
 
 
-################### UNDER CONSTRUCTION ################### 
 
 Features
 
@@ -13,7 +12,7 @@ Features
     - Responsive Navbar using the NextJSTemplates Next.js Tailwind Startup Template including Dark mode
     - Managing Forgot/Recover Password
     - Adding of some 2E2 Tests on Signin & SignUp using Cypress
-    - OIDC Authentification Using Google on client side
+    - OIDC Authentification Using Google on client side on SignUp & on SignIn
 
 
 App Architecture

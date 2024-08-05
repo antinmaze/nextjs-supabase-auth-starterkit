@@ -6,17 +6,47 @@ import EyeFill from '../../icons/EyeFill';
 import EyeSlashFill from '../../icons/EyeSlashFill';
 import { setPasswordVisibility } from "@/utils/auth/factory";
 import { useRouter } from 'next/navigation';
+import { createClient } from "@/utils/supabase/client";
+
 
 const SignInForm = () => {
   const router = useRouter();
 
-  const [infoMessage, setInfoMessage] = useState('');
+  const [registerMessage, setRegisterMessage] = useState('');
+  const [googleMessage, setGoogleMessage] = useState('');
+  
+  const googleMessageRef = useRef<HTMLDivElement | null>(null);
+  const registerMessageRef = useRef<HTMLDivElement | null>(null);
+
+  //const [infoMessage, setRegisterMessage] = useState('');
   const [hasSignedIn, sethasSignedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(false); // loading state
   const TARGET_SUCCESS_PAGE = '/dashboard';
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  
+
+  const googleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    //clean previous message
+    setGoogleMessage('');
+    setRegisterMessage('');
+    //here no signed in needed anymore
+    if (hasSignedIn) return;
+
+    const supabase = createClient();
+    await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
+  }
+
+  const loginSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    //clean previous message
+    setGoogleMessage('');
+    setRegisterMessage('');
 
     if (hasSignedIn) return;
 
@@ -34,13 +64,13 @@ const SignInForm = () => {
       });
 
       if (response.status >= 300) {
-        setInfoMessage(response.statusText);
+        setRegisterMessage(response.statusText);
       } else {
         console.log('Successful connection');
         router.push(TARGET_SUCCESS_PAGE);
       }
     } catch (error) {
-      setInfoMessage('An error has occurred. Please try again later.');
+      setRegisterMessage('An error has occurred. Please try again later.');
     } finally {
       setIsLoading(false); // définir l'état de chargement à false
     }
@@ -66,6 +96,7 @@ const SignInForm = () => {
                 <p className="mb-11 text-center text-base font-medium text-body-color">
                   Login to your account for a faster checkout.
                 </p>
+                <form onSubmit={googleSubmit}>
                 <button className="border-stroke dark:text-body-color-dark dark:shadow-two mb-6 flex w-full items-center justify-center rounded-sm border bg-[#f8f8f8] px-6 py-3 text-base text-body-color outline-none transition-all duration-300 hover:border-primary hover:bg-primary/5 hover:text-primary dark:border-transparent dark:bg-[#2C303B] dark:hover:border-primary dark:hover:bg-primary/5 dark:hover:text-primary dark:hover:shadow-none">
                   <span className="mr-3">
                     <svg
@@ -102,6 +133,10 @@ const SignInForm = () => {
                   </span>
                   Sign in with Google
                 </button>
+                </form>
+                <p id="google-essage" className="text-center h-8 pt-2 text-base font-medium text-red-400">
+                      {googleMessage}
+                </p>
 
                 <div className="mb-8 flex items-center justify-center">
                   <span className="hidden h-[1px] w-full max-w-[70px] bg-body-color/50 sm:block"></span>
@@ -110,7 +145,7 @@ const SignInForm = () => {
                   </p>
                   <span className="hidden h-[1px] w-full max-w-[70px] bg-body-color/50 sm:block"></span>
                 </div>
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={loginSubmit}>
                   <div className="mb-8">
                     <label
                       htmlFor="email"
@@ -155,12 +190,9 @@ const SignInForm = () => {
                   </div>
                   <div className="mb-8 flex flex-col justify-between sm:flex-row sm:items-center">
                     <div>
-                      <a
-                        href="/forgot"
-                        className="text-sm font-medium text-primary hover:underline"
-                      >
-                        Forgot Password?
-                      </a>
+                    <Link href="/forgot" className="text-primary hover:underline">
+                    Forgot Password?
+                  </Link>
                     </div>
                   </div>
                   <div className="mb-6">
@@ -169,9 +201,6 @@ const SignInForm = () => {
                      hover:bg-primary/90" disabled={isLoading}>
                       {isLoading ? 'Loading...' : 'Sign in'}
                     </button>
-                    <p id="infomessage" className="text-center h-8 pt-2 text-base font-medium text-red-400">
-                    {infoMessage}
-                </p>
                   </div>
                 </form>
                 <p className="text-center text-base font-medium text-body-color">
@@ -180,6 +209,10 @@ const SignInForm = () => {
                     Sign up
                   </Link>
                 </p>
+                <p id="register-essage" className="text-center h-8 pt-2 text-base font-medium text-red-400">
+                      {registerMessage}
+                </p>
+
               </div>
             </div>
           </div>
