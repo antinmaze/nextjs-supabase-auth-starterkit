@@ -13,6 +13,8 @@ Features
     - Responsive Navbar using the NextJSTemplates Next.js Tailwind Startup Template including Dark mode
     - Managing Forgot/Recover Password
     - Adding of some 2E2 Tests on Signin & SignUp using Cypress
+    - OIDC Authentification Using Google on client side
+
 
 App Architecture
 
@@ -30,11 +32,9 @@ App Architecture
 
 Backlog
 
-    OIDC Authentification Using Google 
     Supabase Refresh Token (Keep me sign in)
     Implementing the user Profile dedicated page
-    Implementing the restricted acess dashboard page 
-
+    Implementing the restricted access dashboard page 
 
 Deployment
 

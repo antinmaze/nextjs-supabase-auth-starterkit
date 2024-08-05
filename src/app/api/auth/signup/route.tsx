@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
   }
 
   //control the grant status from Supabase
-  const { error } = await supabase.auth.signUp({email, password,});
+  const { data, error } = await supabase.auth.signUp({email, password,});
   if (error) {
     //could be 429 "Email rate limit exceeded" message
     //could be 429 "For security purposes, you can only request this after 48 seconds.""

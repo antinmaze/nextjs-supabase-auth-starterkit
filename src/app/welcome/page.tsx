@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import WelcomeForm from "@/components/Auth/WelcomeForm";
+import WelcomeForm from "@/components/Auth/WelcomePage";
 
 export const metadata: Metadata = {
   title: "Sign Up Page | Free Next.js Template for Startup and SaaS",

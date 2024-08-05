@@ -2,10 +2,6 @@
 
 import Link from "next/link";
 import { Metadata } from "next";
-import { useRef, useState }from 'react';
-import EyeFill from '../../icons/EyeFill';
-import EyeSlashFill from '../../icons/EyeSlashFill';
-import { setPasswordVisibility } from "@/utils/auth/factory";
 
 export const metadata: Metadata = {
   title: "Sign Up Page | Free Next.js Template for Startup and SaaS",
@@ -13,7 +9,7 @@ export const metadata: Metadata = {
   // other metadata
 };
 
-const WelcomeForm = () => {
+const WelcomePage = () => {
 
   return (
     <>
@@ -107,4 +103,4 @@ const WelcomeForm = () => {
   );
 };
 
-export default WelcomeForm;
+export default WelcomePage;

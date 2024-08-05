@@ -6,30 +6,76 @@ import EyeFill from '../../icons/EyeFill';
 import EyeSlashFill from '../../icons/EyeSlashFill';
 import { setPasswordVisibility } from "@/utils/auth/factory";
 import { useRouter } from 'next/navigation';
+import { createClient } from "@/utils/supabase/client";
 
 const SignUpForm = () => {
   const router = useRouter();
 
   const [infoMessage, setInfoMessage] = useState('');
   const infoMessageRef = useRef<HTMLDivElement | null>(null);
-  const [hasSignedUp, sethasSignedUp] = useState(false);
+
+  //const consentSignUpRef = useRef<HTMLInputElement>(null);
+  const [isTermsChecked, setIsTermsChecked] = useState(false);
+
+  const [hasSignedUp, setHasSignedUp] = useState(false);
   const [isLoading, setIsLoading] = useState(false); // loading state
   const TARGET_SUCCESS_PAGE = '/welcome';
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
 
+  const googleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    //clean previous message
+    setInfoMessage('');
+    //here no signed up needed anymore
     if (hasSignedUp) return;
 
-    setIsLoading(true); // set load status to true
+   //Checking Agree with Terms, Conditions and Policy
+   if (!isTermsChecked) {
+      setInfoMessage('Please agree with the Terms and the Privacy'+
+      ' Policy by checking the consent checkbox.');
+      return;
+    }
 
+  const supabase = createClient();
+  await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: `${window.location.origin}/auth/callback`,
+    },
+  });
+  }
+
+  const registerSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    //clean previous message
+    setInfoMessage('');
+    //here no signed up needed anymore
+    if (hasSignedUp) return;
+
+   //Checking Agree with Terms, Conditions and Policy
+   if (!isTermsChecked) {
+    setInfoMessage('Please agree with the Terms and the Privacy'+
+    ' Policy by checking the consent checkbox.');
+    return;
+  }
+  
     const formData = new FormData(event.currentTarget);
     const data = new FormData();
-    data.set('email', formData.get('email') as string);
-    data.set('password', formData.get('password') as string);
+    const inputEmail = formData.get('email') as string;
+    const inputPassword = formData.get('password') as string;
+
+    //Check email or password are empty
+    if(inputEmail.length===0 || inputPassword.length===0) {
+      setInfoMessage('Please complete all the requested information.');
+      return;
+    }
+  
+    setIsLoading(true); // set load status to true
 
     try {
-      const response = await fetch('/api/auth/signup/', {
+        data.set('email', inputEmail);
+        data.set('password', inputPassword);
+        const response = await fetch('/api/auth/signup/', {
         method: 'POST',
         body: data,
       });
@@ -39,7 +85,7 @@ const SignUpForm = () => {
         infoMessageRef.current?.classList.remove('text-primary');
         infoMessageRef.current?.classList.add('text-red-400');
       } else { //Successful connection
-        sethasSignedUp(true);
+        setHasSignedUp(true);
         const json = await response.json();
         const welcomeMessage = json.message;
         setInfoMessage(welcomeMessage);
@@ -55,7 +101,7 @@ const SignUpForm = () => {
       setIsLoading(false); // définir l'état de chargement à false
     }
   };
-
+ 
   const passwordInputRef = useRef(null);
   const handlePasswordVisibility = () => {
     var eyeIconElement = document.getElementById("eye-icon") as HTMLInputElement;
@@ -70,9 +116,10 @@ const SignUpForm = () => {
           <div className="-mx-4 flex flex-wrap">
             <div className="w-full px-4">
               <div className="shadow-three mx-auto max-w-[500px] rounded bg-white px-6 py-10 dark:bg-dark sm:p-[60px]">
-                <h3 className="mb-3 text-center text-2xl font-bold text-black dark:text-white sm:text-3xl">
+                <h3 className="mb-4 text-center text-2xl font-bold text-black dark:text-white sm:text-3xl">
                   Create your account
                 </h3>
+                <form onSubmit={googleSubmit}>
                 <button className="border-stroke dark:text-body-color-dark dark:shadow-two mb-6 flex w-full items-center justify-center rounded-sm border bg-[#f8f8f8] px-6 py-3 text-base text-body-color outline-none transition-all duration-300 hover:border-primary hover:bg-primary/5 hover:text-primary dark:border-transparent dark:bg-[#2C303B] dark:hover:border-primary dark:hover:bg-primary/5 dark:hover:text-primary dark:hover:shadow-none">
                   <span className="mr-3">
                     <svg
@@ -109,7 +156,7 @@ const SignUpForm = () => {
                   </span>
                   Sign in with Google
                 </button>
-
+                </form>
                 <div className="mb-8 flex items-center justify-center">
                   <span className="hidden h-[1px] w-full max-w-[60px] bg-body-color/50 sm:block"></span>
                   <p className="w-full px-5 text-center text-base font-medium text-body-color">
@@ -117,7 +164,7 @@ const SignUpForm = () => {
                   </p>
                   <span className="hidden h-[1px] w-full max-w-[60px] bg-body-color/50 sm:block"></span>
                 </div>
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={registerSubmit}>
                   <div className="mb-8">
                     <label
                       htmlFor="email"
@@ -184,46 +231,37 @@ const SignUpForm = () => {
                       className="flex cursor-pointer select-none text-sm font-medium text-body-color"
                     >
                       <div className="relative">
-                        <input
-                          type="checkbox"
-                          id="checkboxLabel"
-                          className="sr-only"
-                        />
-                        <div className="box mr-4 mt-1 flex h-5 w-5 items-center justify-center rounded border border-body-color border-opacity-20 dark:border-white dark:border-opacity-10">
-                          <span className="opacity-0">
-                            <svg
-                              width="11"
-                              height="8"
-                              viewBox="0 0 11 8"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M10.0915 0.951972L10.0867 0.946075L10.0813 0.940568C9.90076 0.753564 9.61034 0.753146 9.42927 0.939309L4.16201 6.22962L1.58507 3.63469C1.40401 3.44841 1.11351 3.44879 0.932892 3.63584C0.755703 3.81933 0.755703 4.10875 0.932892 4.29224L0.932878 4.29225L0.934851 4.29424L3.58046 6.95832C3.73676 7.11955 3.94983 7.2 4.1473 7.2C4.36196 7.2 4.55963 7.11773 4.71406 6.9584L10.0468 1.60234C10.2436 1.4199 10.2421 1.1339 10.0915 0.951972ZM4.2327 6.30081L4.2317 6.2998C4.23206 6.30015 4.23237 6.30049 4.23269 6.30082L4.2327 6.30081Z"
-                                fill="#3056D3"
-                                stroke="#3056D3"
-                                strokeWidth="0.4"
-                              />
-                            </svg>
+                        <div className="box mr-4 mt-1 flex h-6 w-6 items-center justify-center rounded border border-body-color border-opacity-20 dark:border-white dark:border-opacity-10">
+                          <span>
+                            <input
+                              id="consentSignUp"
+                              name="consentSignUp"
+                              type="checkbox"
+                              onChange={() => setIsTermsChecked(!isTermsChecked)}
+                              className="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded
+                             focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 
+                             focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                            />
                           </span>
                         </div>
                       </div>
                       <span>
                         By creating account means you agree to the
-                        <a href="#0" className="text-primary hover:underline">
+                        <a href="/terms-of-service/" className="text-primary hover:underline">
                           {" "}
                           Terms and Conditions{" "}
                         </a>
-                        , and our
-                        <a href="#0" className="text-primary hover:underline">
+                        , and consent to our
+                        <a href="/privacy-policy/" className="text-primary hover:underline">
                           {" "}
                           Privacy Policy{" "}
                         </a>
                       </span>
                     </label>
                   </div>
-                  <div className="mb-6">
-                    <button id="button-signup" className="shadow-submit dark:shadow-submit-dark flex w-full items-center justify-center rounded-sm
+                  <div className="mb-8">
+                    <button id="button-signup" className="shadow-submit dark:shadow-submit-dark flex w-full 
+                    items-center justify-center rounded-sm
                      bg-primary px-9 py-4 text-base font-medium text-white duration-300
                       hover:bg-primary/90" disabled={isLoading}>
                       {isLoading ? 'Loading...' : 'Sign up'}
